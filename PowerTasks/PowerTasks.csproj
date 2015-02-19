@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0451BAEF-DF2E-4B98-8644-94EE9415E389}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PowerTasks</RootNamespace>
+    <AssemblyName>PowerTasks</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <OutputPath>bin\Debug\</OutputPath>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <OutputPath>bin\Release\</OutputPath>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".Tasks.ps1" />
+    <None Include=".Tasks\Version.nuspec">
+      <DependentUpon>Version.ps1</DependentUpon>
+    </None>
+    <None Include="content\Tasks.ps1" />
+    <None Include="Functions.ps1" />
+    <None Include="PowerTasks.nuspec">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="pt.bat" />
+    <None Include=".Tasks\nuspec\install.ps1" />
+    <None Include=".Tasks\ReplaceCacheBust.nuspec">
+      <SubType>Designer</SubType>
+      <DependentUpon>ReplaceCacheBust.ps1</DependentUpon>
+    </None>
+    <None Include=".Tasks\Test.nuspec">
+      <SubType>Designer</SubType>
+      <DependentUpon>Test.ps1</DependentUpon>
+    </None>
+    <None Include=".Tasks\Compile.nuspec">
+      <SubType>Designer</SubType>
+      <DependentUpon>Compile.ps1</DependentUpon>
+    </None>
+    <None Include=".Tasks\Create7zip.nuspec">
+      <SubType>Designer</SubType>
+      <DependentUpon>Create7zip.ps1</DependentUpon>
+    </None>
+    <None Include=".Tasks\DeployAzure.nuspec">
+      <SubType>Designer</SubType>
+      <DependentUpon>DeployAzure.ps1</DependentUpon>
+    </None>
+    <None Include=".Tasks\DeployAzureWebsite.nuspec">
+      <SubType>Designer</SubType>
+      <DependentUpon>DeployAzureWebsite.ps1</DependentUpon>
+    </None>
+    <None Include=".Tasks\Grunt.nuspec">
+      <SubType>Designer</SubType>
+      <DependentUpon>Grunt.ps1</DependentUpon>
+    </None>
+    <None Include=".Tasks\NpmInstall.nuspec">
+      <SubType>Designer</SubType>
+      <DependentUpon>NpmInstall.ps1</DependentUpon>
+    </None>
+    <None Include=".Tasks\OctoPack.nuspec">
+      <SubType>Designer</SubType>
+      <DependentUpon>OctoPack.ps1</DependentUpon>
+    </None>
+    <None Include=".Tasks\Pack.nuspec">
+      <SubType>Designer</SubType>
+      <DependentUpon>Pack.ps1</DependentUpon>
+    </None>
+    <None Include=".Tasks\Push.nuspec">
+      <SubType>Designer</SubType>
+      <DependentUpon>Push.ps1</DependentUpon>
+    </None>
+    <None Include=".Tasks\Clean.nuspec">
+      <SubType>Designer</SubType>
+      <DependentUpon>Clean.ps1</DependentUpon>
+    </None>
+    <None Include=".Tasks\Version.ps1" />
+    <None Include=".Tasks\Clean.ps1" />
+    <None Include=".Tasks\Compile.ps1" />
+    <None Include=".Tasks\Create7zip.ps1" />
+    <None Include=".Tasks\DeployAzure.ps1" />
+    <None Include=".Tasks\DeployAzureWebsite.ps1" />
+    <None Include=".Tasks\Grunt.ps1" />
+    <None Include=".Tasks\NpmInstall.ps1" />
+    <None Include=".Tasks\OctoPack.ps1" />
+    <None Include=".Tasks\Pack.ps1" />
+    <None Include=".Tasks\Push.ps1" />
+    <None Include=".Tasks\ReplaceCacheBust.ps1" />
+    <None Include=".Tasks\Test.ps1" />
+    <None Include=".Tasks\nuspec\uninstall.ps1" />
+    <None Include="tools\install.ps1" />
+    <None Include="tools\uninstall.ps1" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include=".Tasks\nuspec\DUMMY.txt" />
+    <None Include=".Tasks\specflow_report_template.html">
+      <DependentUpon>Test.ps1</DependentUpon>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
