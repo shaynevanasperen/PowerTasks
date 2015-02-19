@@ -7,7 +7,7 @@
 		<owners>Shayne van Asperen</owners>
 		<licenseUrl>https://github.com/shaynevanasperen/PowerTasks/blob/master/LICENSE</licenseUrl>
 		<projectUrl>https://github.com/shaynevanasperen/PowerTasks</projectUrl>
-		<iconUrl>C:\DEV\Shayne\PowerTasks\pt32.png</iconUrl>
+		<iconUrl>https://raw.githubusercontent.com/shaynevanasperen/PowerTasks/master/pt32.png</iconUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<summary>A PowerTasks plugin providing a "OctoPack" task</summary>
 		<description>OctoPack</description>
