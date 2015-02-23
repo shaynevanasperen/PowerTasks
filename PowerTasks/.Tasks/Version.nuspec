@@ -2,12 +2,12 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
 	<metadata>
 		<id>PowerTasks.Plugins.Version</id>
-		<version>1.0.0-beta-1</version>
+		<version>1.0.0-beta-2</version>
 		<authors>Shayne van Asperen, Kenneth Truyers</authors>
 		<owners>Shayne van Asperen</owners>
 		<licenseUrl>https://github.com/shaynevanasperen/PowerTasks/blob/master/LICENSE</licenseUrl>
 		<projectUrl>https://github.com/shaynevanasperen/PowerTasks</projectUrl>
-		<iconUrl>https://raw.githubusercontent.com/shaynevanasperen/PowerTasks/master/pt32.png</iconUrl>
+		<iconUrl>https://raw.githubusercontent.com/shaynevanasperen/PowerTasks/master/PowerTasks.png</iconUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<summary>A PowerTasks plugin providing a "Version" task</summary>
 		<description>Version</description>
@@ -15,7 +15,7 @@
 		<tags>powershell, invoke, build, tasks, plugin, clean</tags>
 		<developmentDependency>true</developmentDependency>
 		<dependencies>
-			<dependency id="PowerTasks" version="1.0.0-beta-1" />
+			<dependency id="PowerTasks" version="1.0.0-beta-2" />
 		</dependencies>
 	</metadata>
 	<files>

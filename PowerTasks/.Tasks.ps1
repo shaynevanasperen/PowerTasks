@@ -1,6 +1,6 @@
 param(
 	$buildsPath = (property buildsPath $basePath\builds),
-	$prereleaseVersion = (property prereleaseVersion "beta-1")
+	$prereleaseVersion = (property prereleaseVersion "beta-2")
 )
 
 . .\.Tasks\Clean.ps1
