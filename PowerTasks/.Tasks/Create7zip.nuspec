@@ -20,6 +20,8 @@
 	</metadata>
 	<files>
 		<file src="nuspec\DUMMY.txt" target="lib" />
+		<file src="nuspec\install.ps1" target="tools" />
+		<file src="nuspec\uninstall.ps1" target="tools" />
 		<file src="Create7zip.ps1" target="scripts" />
 	</files>
 </package>
