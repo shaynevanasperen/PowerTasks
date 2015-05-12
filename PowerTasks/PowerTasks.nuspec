@@ -22,7 +22,7 @@
 		</tags>
 		<developmentDependency>true</developmentDependency>
 		<dependencies>
-			<dependency id="Invoke-Build" version="2.9.13" />
+			<dependency id="Invoke-Build" version="2.12.1" />
 		</dependencies>
 	</metadata>
 	<files>
