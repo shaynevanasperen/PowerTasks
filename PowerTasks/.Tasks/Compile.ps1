@@ -5,7 +5,7 @@ $script:azureTargetProfile = (property azureTargetProfile "")
 
 $script:projectTests = @(Get-TestProjectsFromSolution $basePath\$projectName.sln $basePath)
 
-task Compile Clean, Version, {
+task Compile {
 	use 12.0 MSBuild
 	Convert-Project $config $basePath $projectName $outputPath $azureTargetProfile
 	$ilMerge = Get-PackageInfo ILMerge $basePath\$projectName

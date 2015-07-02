@@ -5,7 +5,7 @@ $script:browserStackKey = (property browserStackKey "")
 $script:browserStackProxyHost = (property browserStackProxyHost "")
 $script:browserStackProxyPort = (property browserStackProxyPort 0)
 
-task Test Compile, {
+task Test {
 	New-Item $buildsPath -Type directory -Force | Out-Null
 	foreach ($projectTest in $projectTests) {
 		foreach ($type in $projectTest.Types) {

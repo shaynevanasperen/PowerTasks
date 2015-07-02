@@ -3,7 +3,7 @@ $script:prereleaseVersion = (property prereleaseVersion "pre{date}")
 $script:octopusPackageSource = (property octopusPackageSource "")
 $script:octopusPackageSourceApiKey = (property octopusPackageSourceApiKey "LoadFromNuGetConfig")
 
-task OctoPack Test, {
+task OctoPack {
 	$octopusToolsPath = Get-RequiredPackagePath OctopusTools $basePath\.nuget
 	$packageVersion = (Get-Date).ToString("yyyy.MM.dd.HHmmss")
 	if (![string]::IsNullOrEmpty($prereleaseVersion)) {

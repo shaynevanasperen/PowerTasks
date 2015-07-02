@@ -1,5 +1,5 @@
 $script:gruntEnvironment = (property gruntEnvironment)
 
-task Grunt NpmInstall, {
+task Grunt {
 	exec { grunt build --environment=$gruntEnvironment }
 }

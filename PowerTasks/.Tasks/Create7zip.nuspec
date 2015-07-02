@@ -12,7 +12,7 @@
 		<summary>A PowerTasks plugin providing a "Create7zip" task</summary>
 		<description>Create7zip</description>
 		<language>en-US</language>
-		<tags>powershell, invoke, build, tasks, plugin, clean</tags>
+		<tags>powershell, invoke, build, tasks, plugin</tags>
 		<developmentDependency>true</developmentDependency>
 		<dependencies>
 			<dependency id="PowerTasks" version="1.0.0" />
