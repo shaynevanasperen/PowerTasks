@@ -175,11 +175,24 @@ function Get-OutputPath($basePath, $buildsPath, $projectName) {
 	return $outputPath
 }
 
-function Push-Package($basePath, $package, $nugetPackageSource, $nugetPackageSourceApiKey) {
-	if (![string]::IsNullOrEmpty($nugetPackageSourceApiKey) -and $nugetPackageSourceApiKey -ne "LoadFromNuGetConfig") {
-		exec { & NuGet push $package -Source $nugetPackageSource -ApiKey $nugetPackageSourceApiKey }
+function Push-Package($basePath, $package, $nugetPackageSource, $nugetPackageSourceApiKey, $failOnDuplicatePackage) {
+	try
+	{
+		if (![string]::IsNullOrEmpty($nugetPackageSourceApiKey) -and $nugetPackageSourceApiKey -ne "LoadFromNuGetConfig") {
+			$out = NuGet push $package -Source $nugetPackageSource -ApiKey $nugetPackageSourceApiKey 2>&1
+		}
+		else {
+			$out = NuGet push $package -Source $nugetPackageSource 2>&1
+		}
+		Write-Host $out
 	}
-	else {
-		exec { & NuGet push $package -Source $nugetPackageSource }
+	catch{
+		$isDuplicatePackageError = $([String]$_).Contains("Overwriting existing packages is forbidden")	
+		if(!$isDuplicatePackageError -or ($failOnDuplicatePackage -and $isDuplicatePackageError)){		
+			throw
+		}
+		else{
+			Write-Host "WARNING: $_"
+		}
 	}
 }
