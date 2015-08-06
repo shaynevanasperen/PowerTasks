@@ -3,6 +3,7 @@ $script:nugetPackageSource = (property nugetPackageSource "")
 $script:nugetPackageSourceApiKey = (property nugetPackageSourceApiKey "LoadFromNuGetConfig")
 $script:nugetSymbolsPackageSource = (property nugetSymbolsPackageSource "")
 $script:nugetSymbolsPackageSourceApiKey = (property nugetSymbolsPackageSourceApiKey "LoadFromNuGetConfig")
+$script:failOnDuplicatePackage = (property failOnDuplicatePackage $true)
 
 task Push {	
 	$packages = @(Get-ChildItem $buildsPath\*.nupkg)
@@ -39,10 +40,10 @@ task Push {
 		
 		foreach($package in $packages) {
 			if ($package.Name.EndsWith("symbols.nupkg") -and $nugetSymbolsPackageSource) {
-				Push-Package $basePath $package $nugetSymbolsPackageSource $nugetSymbolsPackageSourceApiKey
+				Push-Package $basePath $package $nugetSymbolsPackageSource $nugetSymbolsPackageSourceApiKey $failOnDuplicatePackage
 			}
 			else {
-				Push-Package $basePath $package $nugetPackageSource $nugetPackageSourceApiKey
+				Push-Package $basePath $package $nugetPackageSource $nugetPackageSourceApiKey $failOnDuplicatePackage
 			}
 		}
 	}
