@@ -187,7 +187,8 @@ function Push-Package($basePath, $package, $nugetPackageSource, $nugetPackageSou
 		Write-Host $out
 	}
 	catch{
-		$isDuplicatePackageError = $([String]$_).Contains("Overwriting existing packages is forbidden")	
+		$isDuplicatePackageError = $([String]$_).Contains("Overwriting existing packages is forbidden")	 -or 
+								   $([String]$_).Contains(" exists in compilation with different binary hash")
 		if(!$isDuplicatePackageError -or ($failOnDuplicatePackage -and $isDuplicatePackageError)){		
 			throw
 		}
