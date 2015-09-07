@@ -1,4 +1,4 @@
-$script:buildsPath = (property buildsPath $basePath\builds)
+$script:artifactsPath = (property artifactsPath $basePath\artifacts)
 $script:nugetPackageSource = (property nugetPackageSource "")
 $script:nugetPackageSourceApiKey = (property nugetPackageSourceApiKey "LoadFromNuGetConfig")
 $script:nugetSymbolsPackageSource = (property nugetSymbolsPackageSource "")
@@ -6,9 +6,9 @@ $script:nugetSymbolsPackageSourceApiKey = (property nugetSymbolsPackageSourceApi
 $script:failOnDuplicatePackage = (property failOnDuplicatePackage $true)
 
 task Push {	
-	$packages = @(Get-ChildItem $buildsPath\*.nupkg)
+	$packages = @(Get-ChildItem $artifactsPath\*.nupkg)
 	if ($packages.Count -eq 0) {
-		"No packages were found in $buildsPath. Please build some packages first."
+		"No packages were found in $artifactsPath. Please build some packages first."
 	}
 	else {
 		"Pushing the following packages:"

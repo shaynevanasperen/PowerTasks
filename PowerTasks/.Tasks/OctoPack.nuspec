@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
 	<metadata>
 		<id>PowerTasks.Plugins.OctoPack</id>
-		<version>1.0.1</version>
+		<version>2.0.0</version>
 		<authors>Shayne van Asperen, Kenneth Truyers</authors>
 		<owners>Shayne van Asperen</owners>
 		<licenseUrl>https://github.com/shaynevanasperen/PowerTasks/blob/master/LICENSE</licenseUrl>
@@ -15,7 +15,7 @@
 		<tags>powershell, invoke, build, tasks, plugin</tags>
 		<developmentDependency>true</developmentDependency>
 		<dependencies>
-			<dependency id="PowerTasks" version="1.0.0" />
+			<dependency id="PowerTasks" version="2.0.0" />
 		</dependencies>
 	</metadata>
 	<files>

@@ -1,6 +1,6 @@
-$script:buildsPath = (property buildsPath $basePath\builds)
+$script:artifactsPath = (property artifactsPath $basePath\artifacts)
 $script:config = (property config "Release")
-$script:outputPath = (property outputPath (Get-OutputPath $basePath $buildsPath $projectName))
+$script:outputPath = (property outputPath (Get-OutputPath $basePath $artifactsPath $projectName))
 $script:azureTargetProfile = (property azureTargetProfile "")
 
 $script:projectTests = @(Get-TestProjectsFromSolution $basePath\$projectName.sln $basePath)

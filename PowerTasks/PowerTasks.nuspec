@@ -11,9 +11,9 @@
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<summary>Convention based task runner using Invoke-Build</summary>
 		<description>
-			This package provides PowerShell scripts to automatically compile, package, test and deploy your code based on a set of conventions.
-			It is based on Invoke-Build and consists of a set of tasks written in Powershell. There are predefined properties and tasks as well
-			as some useful functions which you can use to help create your own custom tasks.
+			A PowerShell task runner based on Invoke-Build. Invoke-Build is a build and test automation tool which invokes tasks defined in PowerShell scripts.
+			It is similar to psake but arguably easier to use and more powerful. Removes the boilerplate code from your build scripts and supports a convention-based
+			plugin model for extending functionality with common tasks	and includes some useful functions which you can use to help create your own custom tasks.
 		</description>
 		<language>en-US</language>
 		<tags>
@@ -22,7 +22,7 @@
 		</tags>
 		<developmentDependency>true</developmentDependency>
 		<dependencies>
-			<dependency id="Invoke-Build" version="2.12.1" />
+			<dependency id="Invoke-Build" version="2.12.3" />
 		</dependencies>
 	</metadata>
 	<files>

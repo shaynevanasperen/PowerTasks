@@ -1,5 +1,5 @@
 param(
-	$buildsPath = (property buildsPath $basePath\builds),
+	$artifactsPath = (property artifactsPath $basePath\artifacts),
 	$prereleaseVersion = (property prereleaseVersion "")
 )
 
@@ -12,10 +12,10 @@ task CopyReadme {
 }
 
 task Pack Clean, Version, CopyReadme, {
-	New-Item $buildsPath -Type directory -Force | Out-Null
+	New-Item $artifactsPath -Type directory -Force | Out-Null
 	$packageVersion = $version | Resolve-PackageVersion $prereleaseVersion
-	exec { & NuGet pack $basePath\$projectName\$projectName.nuspec -OutputDirectory $buildsPath -Properties Version=$packageVersion -NoPackageAnalysis }
-	Get-ChildItem $basePath\$projectName\.Tasks\*.nuspec -Recurse | %{ exec { & NuGet pack $_.FullName -OutputDirectory $buildsPath -NoPackageAnalysis } }
+	exec { & NuGet pack $basePath\$projectName\$projectName.nuspec -OutputDirectory $artifactsPath -Properties Version=$packageVersion -NoPackageAnalysis }
+	Get-ChildItem $basePath\$projectName\.Tasks\*.nuspec -Recurse | %{ exec { & NuGet pack $_.FullName -OutputDirectory $artifactsPath -NoPackageAnalysis } }
 }
 
 task . Pack

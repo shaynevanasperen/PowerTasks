@@ -168,10 +168,10 @@ function Get-ProjectFile($basePath, $projectName) {
 	return $projectFile
 }
 
-function Get-OutputPath($basePath, $buildsPath, $projectName) {
+function Get-OutputPath($basePath, $artifactsPath, $projectName) {
 	$projectFile = Get-ProjectFile $basePath $projectName
 	$projectName = Get-ProjectName $projectFile
-	$outputPath = "$buildsPath\$projectName"
+	$outputPath = "$artifactsPath\$projectName"
 	return $outputPath
 }
 

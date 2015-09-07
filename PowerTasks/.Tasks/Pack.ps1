@@ -1,10 +1,10 @@
-$script:buildsPath = (property buildsPath $basePath\builds)
+$script:artifactsPath = (property artifactsPath $basePath\artifacts)
 $script:config = (property config "Release")
 $script:version = (property version "")
 $script:prereleaseVersion = (property prereleaseVersion "pre{date}")
 
 task Pack {
-	New-Item $buildsPath -Type directory -Force | Out-Null
+	New-Item $artifactsPath -Type directory -Force | Out-Null
 	$packageVersion = $version | Resolve-PackageVersion $prereleaseVersion
-	exec { & NuGet pack $basePath\$projectName\$projectName.csproj -Properties Configuration=$config -OutputDirectory $buildsPath -Symbols -Version $packageVersion }
+	exec { & NuGet pack $basePath\$projectName\$projectName.csproj -Properties Configuration=$config -OutputDirectory $artifactsPath -Symbols -Version $packageVersion }
 }

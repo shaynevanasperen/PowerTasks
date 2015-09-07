@@ -1,9 +1,9 @@
-$script:buildsPath = (property buildsPath $basePath\builds)
+$script:artifactsPath = (property artifactsPath $basePath\artifacts)
 
 task Clean {
-	if (Test-Path $buildsPath) {
-		"Cleaning builds folder"
-		Remove-Item $buildsPath\* -Recurse
+	if (Test-Path $artifactsPath) {
+		"Cleaning artifacts folder"
+		Remove-Item $artifactsPath\* -Recurse
 	}
 	"Cleaning bin folders"
 	Remove-Directory "$basePath\*\bin"

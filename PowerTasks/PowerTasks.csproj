@@ -54,6 +54,7 @@
     </None>
     <None Include="content\Tasks.ps1" />
     <None Include="Functions.ps1" />
+    <None Include="packages.config" />
     <None Include="PowerTasks.nuspec">
       <SubType>Designer</SubType>
     </None>

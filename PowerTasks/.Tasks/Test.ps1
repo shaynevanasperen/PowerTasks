@@ -1,4 +1,4 @@
-$script:buildsPath = (property buildsPath $basePath\builds)
+$script:artifactsPath = (property artifactsPath $basePath\artifacts)
 $script:config = (property config "Release")
 $script:browserStackUser = (property browserStackUser "")
 $script:browserStackKey = (property browserStackKey "")
@@ -6,29 +6,29 @@ $script:browserStackProxyHost = (property browserStackProxyHost "")
 $script:browserStackProxyPort = (property browserStackProxyPort 0)
 
 task Test {
-	New-Item $buildsPath -Type directory -Force | Out-Null
+	New-Item $artifactsPath -Type directory -Force | Out-Null
 	foreach ($projectTest in $projectTests) {
 		foreach ($type in $projectTest.Types) {
 			switch ($type.Id) {
 				Machine.Specifications {
 					if($type.Number -ge 90) {
-						$mspecRunnerPath = Get-RequiredPackagePath Machine.Specifications.Runner.Console $basePath\.nuget
+						$mspecRunnerPath = Get-RequiredPackagePath Machine.Specifications.Runner.Console "$basePath\$($projectTest.Path)"
 					}
 					else {
 						$mspecRunnerPath = $type.Path
 					}
 					$runnerExecutable = "$mspecRunnerPath\tools\mspec-clr4.exe"
-					exec { & $runnerExecutable --html $buildsPath $basePath\$($projectTest.Path)\bin\$config\$($projectTest.Name).dll }
+					exec { & $runnerExecutable --html $artifactsPath $basePath\$($projectTest.Path)\bin\$config\$($projectTest.Name).dll }
 					continue
 				}
 				NUnit {
-					$nunitRunnerPath = Get-RequiredPackagePath NUnit.Runners $basePath\.nuget
+					$nunitRunnerPath = Get-RequiredPackagePath NUnit.Runners "$basePath\$($projectTest.Path)"
 					$runnerExecutable = "$nunitRunnerPath\tools\nunit-console.exe"
-					exec { & $runnerExecutable /xml:$buildsPath\nunit.xml /nologo $basePath\$($projectTest.Path)\bin\$config\$($projectTest.Name).dll }
+					exec { & $runnerExecutable /xml:$artifactsPath\nunit.xml /nologo $basePath\$($projectTest.Path)\bin\$config\$($projectTest.Name).dll }
 					continue
 				}
 				SpecFlow {
-					$nunitRunnerPath = Get-RequiredPackagePath NUnit.Runners $basePath\.nuget
+					$nunitRunnerPath = Get-RequiredPackagePath NUnit.Runners "$basePath\$($projectTest.Path)"
 					$runnerExecutable = "$nunitRunnerPath\tools\nunit-console.exe"
 					$specflowExecutable = "$($type.Path)\tools\specflow.exe"
 					$configurations = @(Get-SolutionConfigurations $basePath\$projectName.sln) | Where { (Get-IsLocalTest $_ $basePath\$($projectTest.Path)) -ne $true }
@@ -64,16 +64,16 @@ task Test {
 									}
 								}
 							} -ScriptBlock {
-								param($runnerExecutable, $specflowExecutable, $buildsPath, $configuration, $basePath, $projectTest)
-								exec { & $runnerExecutable /labels /out=$buildsPath\nunit_$configuration.txt /xml:$buildsPath\nunit_$configuration.xml /nologo /config:$configuration $basePath\$($projectTest.Path)\bin\$configuration\$($projectTest.Name).dll }
-								exec { & $specflowExecutable nunitexecutionreport $basePath\$($projectTest.Path)\$($projectTest.File) /out:$buildsPath\specresult_$configuration.html /xmlTestResult:$buildsPath\nunit_$configuration.xml /testOutput:$buildsPath\nunit_$configuration.txt }
-							} -ArgumentList (Resolve-Path $runnerExecutable), (Resolve-Path $specflowExecutable), (Resolve-Path $buildsPath), $_, (Resolve-Path $basePath), $projectTest
+								param($runnerExecutable, $specflowExecutable, $artifactsPath, $configuration, $basePath, $projectTest)
+								exec { & $runnerExecutable /labels /out=$artifactsPath\nunit_$configuration.txt /xml:$artifactsPath\nunit_$configuration.xml /nologo /config:$configuration $basePath\$($projectTest.Path)\bin\$configuration\$($projectTest.Name).dll }
+								exec { & $specflowExecutable nunitexecutionreport $basePath\$($projectTest.Path)\$($projectTest.File) /out:$artifactsPath\specresult_$configuration.html /xmlTestResult:$artifactsPath\nunit_$configuration.xml /testOutput:$artifactsPath\nunit_$configuration.txt }
+							} -ArgumentList (Resolve-Path $runnerExecutable), (Resolve-Path $specflowExecutable), (Resolve-Path $artifactsPath), $_, (Resolve-Path $basePath), $projectTest
 						}
 						Get-Job | Wait-Job
 						Get-Job | Receive-Job
 					}
 					finally {
-						New-SpecFlowReport $configurations $buildsPath
+						New-SpecFlowReport $configurations $artifactsPath
 						Stop-Process -processname "BrowserStackLocal"
 					}
 					continue
@@ -87,7 +87,7 @@ task Test {
 	}
 }
 
-function script:New-SpecFlowReport($configurations, $buildsPath) {
+function script:New-SpecFlowReport($configurations, $artifactsPath) {
 	$template = [IO.File]::ReadAllText("$PSScriptRoot\specflow_report_template.html");
 	
 	$links = "";
@@ -97,7 +97,7 @@ function script:New-SpecFlowReport($configurations, $buildsPath) {
 	
 	$output = $template -replace "%links%", $links
 	
-	New-Item $buildsPath\specresult.html -Type file -Force -Value $output | Out-Null
+	New-Item $artifactsPath\specresult.html -Type file -Force -Value $output | Out-Null
 }
 
 function script:Set-ConfigValue($key, $value, $path) {
