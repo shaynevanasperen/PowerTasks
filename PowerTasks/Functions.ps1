@@ -175,9 +175,8 @@ function Get-OutputPath($basePath, $artifactsPath, $projectName) {
 	return $outputPath
 }
 
-function Push-Package($basePath, $package, $nugetPackageSource, $nugetPackageSourceApiKey, $failOnDuplicatePackage) {
-	try
-	{
+function Push-Package($basePath, $package, $nugetPackageSource, $nugetPackageSourceApiKey, $ignoreNugetPushErrors) {
+	try {
 		if (![string]::IsNullOrEmpty($nugetPackageSourceApiKey) -and $nugetPackageSourceApiKey -ne "LoadFromNuGetConfig") {
 			$out = NuGet push $package -Source $nugetPackageSource -ApiKey $nugetPackageSourceApiKey 2>&1
 		}
@@ -186,14 +185,18 @@ function Push-Package($basePath, $package, $nugetPackageSource, $nugetPackageSou
 		}
 		Write-Host $out
 	}
-	catch{
-		$isDuplicatePackageError = $([String]$_).Contains("Overwriting existing packages is forbidden")	 -or 
-								   $([String]$_).Contains(" exists in compilation with different binary hash")
-		if(!$isDuplicatePackageError -or ($failOnDuplicatePackage -and $isDuplicatePackageError)){		
+	catch {
+		$errorMessage = $_
+		$ignoreNugetPushErrors.Split(";") | foreach {
+			if ($([String]$errorMessage).Contains($_)) {
+				$isNugetPushError = $true
+			}
+		}
+		if (!$isNugetPushError) {
 			throw
 		}
-		else{
-			Write-Host "WARNING: $_"
+		else {
+			Write-Host "WARNING: $errorMessage"
 		}
 	}
 }

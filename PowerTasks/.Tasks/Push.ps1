@@ -3,7 +3,7 @@ $script:nugetPackageSource = (property nugetPackageSource "")
 $script:nugetPackageSourceApiKey = (property nugetPackageSourceApiKey "LoadFromNuGetConfig")
 $script:nugetSymbolsPackageSource = (property nugetSymbolsPackageSource "")
 $script:nugetSymbolsPackageSourceApiKey = (property nugetSymbolsPackageSourceApiKey "LoadFromNuGetConfig")
-$script:failOnDuplicatePackage = (property failOnDuplicatePackage $true)
+$script:ignoreNugetPushErrors = (property ignoreNugetPushErrors "") # Semicolon-delimited string of known error messages to ignore
 
 task Push {	
 	$packages = @(Get-ChildItem $artifactsPath\*.nupkg)
@@ -40,10 +40,10 @@ task Push {
 		
 		foreach($package in $packages) {
 			if ($package.Name.EndsWith("symbols.nupkg") -and $nugetSymbolsPackageSource) {
-				Push-Package $basePath $package $nugetSymbolsPackageSource $nugetSymbolsPackageSourceApiKey $failOnDuplicatePackage
+				Push-Package $basePath $package $nugetSymbolsPackageSource $nugetSymbolsPackageSourceApiKey $ignoreNugetPushErrors
 			}
 			else {
-				Push-Package $basePath $package $nugetPackageSource $nugetPackageSourceApiKey $failOnDuplicatePackage
+				Push-Package $basePath $package $nugetPackageSource $nugetPackageSourceApiKey $ignoreNugetPushErrors
 			}
 		}
 	}
