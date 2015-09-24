@@ -2,6 +2,7 @@ $script:artifactsPath = (property artifactsPath $basePath\artifacts)
 $script:prereleaseVersion = (property prereleaseVersion "pre{date}")
 $script:octopusPackageSource = (property octopusPackageSource "")
 $script:octopusPackageSourceApiKey = (property octopusPackageSourceApiKey "LoadFromNuGetConfig")
+$script:ignoreNugetPushErrors = (property ignoreNugetPushErrors "") # Semicolon-delimited string of known error messages to ignore
 
 task OctoPack {
 	$octopusToolsPath = Get-RequiredPackagePath OctopusTools $basePath\$projectName
@@ -18,5 +19,5 @@ task OctoPack {
 	if (!$octopusPackageSourceApiKey) {
 		$octopusPackageSourceApiKey = Read-Host "Please enter Octopus package source API key"
 	}
-	Push-Package $basePath $octopusPackage $octopusPackageSource $octopusPackageSourceApiKey
+	Push-Package $basePath $octopusPackage $octopusPackageSource $octopusPackageSourceApiKey $ignoreNugetPushErrors
 }
