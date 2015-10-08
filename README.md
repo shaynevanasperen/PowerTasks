@@ -1,4 +1,6 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/oxufjfmm7p2c1qdx?svg=true)](https://ci.appveyor.com/project/shaynevanasperen/powertasks)
+[![NuGet Version](http://img.shields.io/nuget/v/PowerTasks.svg?style=flat)](https://www.nuget.org/packages/PowerTasks)
+[![NuGet Downloads](http://img.shields.io/nuget/dt/PowerTasks.svg?style=flat)](https://www.nuget.org/packages/PowerTasks)
 PowerTasks
 ==========
 
