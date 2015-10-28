@@ -28,7 +28,6 @@ function Get-CommitsFromGitLog($StartCommit, $EndCommit){
 
 function Load-TeamCityProperties($file)
 {
-	Write-Host "Loading file $file"
 	$xml = New-Object System.Xml.XmlDocument
     $xml.XmlResolver = $null;
     $xml.Load($file);
@@ -37,7 +36,6 @@ function Load-TeamCityProperties($file)
         $key = $entry.key;
         $value = $entry.'#text';
         $properties[$key] = $value;
-		Write-Host "$key = $value"
     }
 	$properties
 }
@@ -46,7 +44,6 @@ function Get-TeamCityLastSuccessfulRunCommit($serverUrl, $username, $password, $
 {
 	$AuthString = [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes("$username`:$password"))
     $Url = "$serverUrl/app/rest/buildTypes/id:$buildTypeId/builds/status:SUCCESS" 
-	Write-Host "Url is $Url"
     $Content = Invoke-WebRequest "$Url" -Headers @{"Authorization" = "Basic $AuthString"} -UseBasicParsing
 	(Select-Xml -Content "$Content" -Xpath "/build/revisions/revision/@version").Node.Value
 }
