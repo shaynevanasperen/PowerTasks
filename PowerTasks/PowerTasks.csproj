@@ -49,6 +49,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".Tasks.ps1" />
+    <None Include=".Tasks\TeamCityReleaseNotes.nuspec">
+      <DependentUpon>TeamCityReleaseNotes.ps1</DependentUpon>
+    </None>
+    <None Include=".Tasks\TeamCityReleaseNotes.ps1" />
     <None Include=".Tasks\Version.nuspec">
       <DependentUpon>Version.ps1</DependentUpon>
     </None>
