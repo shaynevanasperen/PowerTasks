@@ -19,7 +19,8 @@ function Get-CommitsFromGitLog($StartCommit, $EndCommit){
 	$fs = New-Object -ComObject Scripting.FileSystemObject
     $git = $fs.GetFile("$gitPath").shortPath
  
-    $cmd =  "$git log --pretty=format:""%h | %ad | %an | %s%d"" --date=short $StartCommit...$EndCommit"
+    $cmd =  "$git log --pretty=format:""- %h | %ad | %an | %s%d"" --date=short $StartCommit...$EndCommit"
+
 	pushd $basePath
 	$result = $(Invoke-Expression "$cmd")
 	popd
