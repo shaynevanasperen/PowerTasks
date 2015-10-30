@@ -14,7 +14,7 @@ task TeamCityReleaseNotes {
 	Get-CommitsFromGitLog $latestCommitFromRun $configProperties["build.vcs.number"] > "$artifactsPath\releasenotes.md"
 }
 
-function Get-CommitsFromGitLog($startCommit, $endCommit){
+function script:Get-CommitsFromGitLog($startCommit, $endCommit){
     $gitPath = $env:TEAMCITY_GIT_PATH
 	$fs = New-Object -ComObject Scripting.FileSystemObject
     $git = $fs.GetFile("$gitPath").shortPath
@@ -27,7 +27,7 @@ function Get-CommitsFromGitLog($startCommit, $endCommit){
 	$result
 }
 
-function Load-TeamCityProperties($file)
+function script:Load-TeamCityProperties($file)
 {
 	$xml = New-Object System.Xml.XmlDocument
     $xml.XmlResolver = $null;
@@ -41,7 +41,7 @@ function Load-TeamCityProperties($file)
 	$properties
 }
 
-function Get-TeamCityLastSuccessfulRunCommit($serverUrl, $username, $password, $buildTypeId)
+function script:Get-TeamCityLastSuccessfulRunCommit($serverUrl, $username, $password, $buildTypeId)
 {
 	$authString = [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes("$username`:$password"))
     $url = "$serverUrl/app/rest/buildTypes/id:$buildTypeId/builds/status:SUCCESS" 
