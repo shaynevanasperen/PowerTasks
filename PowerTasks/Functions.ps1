@@ -22,15 +22,17 @@ function Get-AssemblyFileVersion($assemblyInfoFile) {
 }
 
 function Resolve-PackageVersion($prereleaseVersion) {
-	if (![string]::IsNullOrEmpty($prereleaseVersion)) {
+	if (![string]::IsNullOrWhiteSpace($prereleaseVersion)) {
+		$parsed = $prereleaseVersion.Replace("{date}", $(Get-Date).ToString("yyMMddHHmm"))
+		$parsed = $parsed -Replace "[^a-zA-Z0-9]", ""
+	}
+	if (![string]::IsNullOrWhiteSpace($parsed)) {
 		$version = ([string]$input).Split('-')[0]
-		$date = Get-Date
-		$parsed = $prereleaseVersion.Replace("{date}", $date.ToString("yyMMddHHmm"))
 		return "$version-$parsed"
 	}
 	else {
 		return $input
-	}
+	}	
 }
 
 function Include-PluginScripts([string[]] $packageIdPatterns) {
