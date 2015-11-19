@@ -24,7 +24,7 @@ function Get-AssemblyFileVersion($assemblyInfoFile) {
 function Resolve-PackageVersion($prereleaseVersion) {
 	if (![string]::IsNullOrWhiteSpace($prereleaseVersion)) {
 		$parsed = $prereleaseVersion.Replace("{date}", $(Get-Date).ToString("yyMMddHHmm"))
-		$parsed = $parsed -Replace "[^a-zA-Z0-9]", ""
+		$parsed = $parsed -Replace "[^a-zA-Z0-9-]", ""
 	}
 	if (![string]::IsNullOrWhiteSpace($parsed)) {
 		$version = ([string]$input).Split('-')[0]
@@ -32,7 +32,7 @@ function Resolve-PackageVersion($prereleaseVersion) {
 	}
 	else {
 		return $input
-	}	
+	}
 }
 
 function Include-PluginScripts([string[]] $packageIdPatterns) {
