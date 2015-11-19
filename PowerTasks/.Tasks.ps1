@@ -18,4 +18,4 @@ task Pack Clean, Version, CopyReadme, {
 	Get-ChildItem $basePath\$projectName\.Tasks\*.nuspec -Recurse | %{ exec { & NuGet pack $_.FullName -OutputDirectory $artifactsPath -NoPackageAnalysis } }
 }
 
-task . Pack
+task . Pack, Push
