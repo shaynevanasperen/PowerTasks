@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
 	<metadata>
 		<id>PowerTasks.Plugins.OctoPack</id>
-		<version>4.0.0</version>
+		<version>4.0.1</version>
 		<authors>Shayne van Asperen, Kenneth Truyers</authors>
 		<owners>Shayne van Asperen</owners>
 		<licenseUrl>https://github.com/shaynevanasperen/PowerTasks/blob/master/LICENSE</licenseUrl>
@@ -16,7 +16,7 @@
 		<developmentDependency>true</developmentDependency>
 		<dependencies>
 			<dependency id="PowerTasks" version="2.0.0" />
-			<dependency id="OctopusTools" version="3.2.0.91" />
+			<dependency id="OctopusTools" version="3.3.1" />
 		</dependencies>
 	</metadata>
 	<files>
