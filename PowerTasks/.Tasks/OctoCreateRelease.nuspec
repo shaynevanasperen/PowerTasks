@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
 	<metadata>
 		<id>PowerTasks.Plugins.OctoCreateRelease</id>
-		<version>1.0.0</version>
+		<version>1.0.1</version>
 		<authors>Shayne van Asperen, Kenneth Truyers</authors>
 		<owners>Shayne van Asperen</owners>
 		<licenseUrl>https://github.com/shaynevanasperen/PowerTasks/blob/master/LICENSE</licenseUrl>
@@ -10,13 +10,13 @@
 		<iconUrl>https://raw.githubusercontent.com/shaynevanasperen/PowerTasks/master/PowerTasks.png</iconUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<summary>A PowerTasks plugin which creates a release on an Octopus Deploy server and optionally deploys it</summary>
-		<description>OctoCreateRelease (Warning: This package depends on OctopusTools, version 3.2.0.91, which is a solution level package, which means it can't be installed using NuGet 3.0 or higher. An issue has been created to fix this: https://github.com/OctopusDeploy/Issues/issues/2100 and when a fix is published, this package will be updated to reference it.)</description>
+		<description>OctoCreateRelease</description>
 		<language>en-US</language>
 		<tags>powershell, invoke, build, tasks, plugin, deploy, octopus</tags>
 		<developmentDependency>true</developmentDependency>
 		<dependencies>
 			<dependency id="PowerTasks" version="2.0.0" />
-			<dependency id="OctopusTools" version="3.2.0.91" />
+			<dependency id="OctopusTools" version="3.3.1" />
 		</dependencies>
 	</metadata>
 	<files>
