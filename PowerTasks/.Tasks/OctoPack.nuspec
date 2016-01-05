@@ -10,7 +10,7 @@
 		<iconUrl>https://raw.githubusercontent.com/shaynevanasperen/PowerTasks/master/PowerTasks.png</iconUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<summary>A PowerTasks plugin providing a "OctoPack" task</summary>
-		<description>OctoPack (Warning: This package depends on OctopusTools, version 3.2.0.91, which is a solution level package, which means it can't be installed using NuGet 3.0 or higher. An issue has been created to fix this: https://github.com/OctopusDeploy/Issues/issues/2100 and when a fix is published, this package will be updated to reference it.)</description>
+		<description>OctoPack</description>
 		<language>en-US</language>
 		<tags>powershell, invoke, build, tasks, plugin</tags>
 		<developmentDependency>true</developmentDependency>
