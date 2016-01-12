@@ -72,10 +72,6 @@
       <SubType>Designer</SubType>
       <DependentUpon>ReplaceCacheBust.ps1</DependentUpon>
     </None>
-    <None Include=".Tasks\Test.nuspec">
-      <SubType>Designer</SubType>
-      <DependentUpon>Test.ps1</DependentUpon>
-    </None>
     <None Include=".Tasks\Compile.nuspec">
       <SubType>Designer</SubType>
       <DependentUpon>Compile.ps1</DependentUpon>
@@ -128,7 +124,6 @@
     <None Include=".Tasks\Pack.ps1" />
     <None Include=".Tasks\Push.ps1" />
     <None Include=".Tasks\ReplaceCacheBust.ps1" />
-    <None Include=".Tasks\Test.ps1" />
     <None Include=".Tasks\nuspec\uninstall.ps1" />
     <None Include="tools\install.ps1" />
     <None Include="tools\uninstall.ps1" />
@@ -136,9 +131,6 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include=".Tasks\nuspec\DUMMY.txt" />
-    <None Include=".Tasks\specflow_report_template.html">
-      <DependentUpon>Test.ps1</DependentUpon>
-    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
