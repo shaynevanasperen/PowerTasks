@@ -53,6 +53,10 @@
       <DependentUpon>Chutzpah.ps1</DependentUpon>
     </None>
     <None Include=".Tasks\Chutzpah.ps1" />
+    <None Include=".Tasks\XUnit.nuspec">
+      <DependentUpon>XUnit.ps1</DependentUpon>
+    </None>
+    <None Include=".Tasks\XUnit.ps1" />
     <None Include=".Tasks\NUnit.nuspec">
       <DependentUpon>NUnit.ps1</DependentUpon>
     </None>
