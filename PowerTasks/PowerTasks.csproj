@@ -49,6 +49,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".Tasks.ps1" />
+    <None Include=".Tasks\OctoDeployRelease.nuspec">
+      <DependentUpon>OctoDeployRelease.ps1</DependentUpon>
+    </None>
+    <None Include=".Tasks\OctoDeployRelease.ps1" />
     <None Include=".Tasks\OctoCreateRelease.ps1" />
     <None Include=".Tasks\OctoCreateRelease.nuspec">
       <DependentUpon>OctoCreateRelease.ps1</DependentUpon>
