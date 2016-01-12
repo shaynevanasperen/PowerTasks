@@ -49,6 +49,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".Tasks.ps1" />
+    <None Include=".Tasks\NUnit.nuspec">
+      <DependentUpon>NUnit.ps1</DependentUpon>
+    </None>
+    <None Include=".Tasks\NUnit.ps1" />
     <None Include=".Tasks\MSpec.nuspec">
       <DependentUpon>MSpec.ps1</DependentUpon>
     </None>
