@@ -75,6 +75,7 @@ function Get-TestProjectsFromSolution($solution, $basePath) {
 }
 
 function Get-ProjectsWithPackage($packageName){
+	$solution = "$basePath\$projectName.sln"
 	$projects = @()
 	if (Test-Path $solution) {
 		Get-Content $solution |
