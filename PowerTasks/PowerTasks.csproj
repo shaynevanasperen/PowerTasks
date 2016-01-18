@@ -53,6 +53,21 @@
       <DependentUpon>OctoDeployRelease.ps1</DependentUpon>
     </None>
     <None Include=".Tasks\OctoDeployRelease.ps1" />
+    <None Include=".Tasks\Chutzpah.nuspec">
+      <DependentUpon>Chutzpah.ps1</DependentUpon>
+    </None>
+    <None Include=".Tasks\Chutzpah.ps1" />
+    <None Include=".Tasks\XUnit.nuspec">
+      <DependentUpon>XUnit.ps1</DependentUpon>
+    </None>
+    <None Include=".Tasks\XUnit.ps1" />
+    <None Include=".Tasks\NUnit.nuspec">
+      <DependentUpon>NUnit.ps1</DependentUpon>
+    </None>
+    <None Include=".Tasks\NUnit.ps1" />
+    <None Include=".Tasks\MSpec.nuspec">
+      <DependentUpon>MSpec.ps1</DependentUpon>
+    </None>
     <None Include=".Tasks\OctoCreateRelease.ps1" />
     <None Include=".Tasks\OctoCreateRelease.nuspec">
       <DependentUpon>OctoCreateRelease.ps1</DependentUpon>
@@ -61,6 +76,7 @@
       <DependentUpon>TeamCityReleaseNotes.ps1</DependentUpon>
     </None>
     <None Include=".Tasks\TeamCityReleaseNotes.ps1" />
+    <None Include=".Tasks\MSpec.ps1" />
     <None Include=".Tasks\Version.nuspec">
       <DependentUpon>Version.ps1</DependentUpon>
     </None>
@@ -75,10 +91,6 @@
     <None Include=".Tasks\ReplaceCacheBust.nuspec">
       <SubType>Designer</SubType>
       <DependentUpon>ReplaceCacheBust.ps1</DependentUpon>
-    </None>
-    <None Include=".Tasks\Test.nuspec">
-      <SubType>Designer</SubType>
-      <DependentUpon>Test.ps1</DependentUpon>
     </None>
     <None Include=".Tasks\Compile.nuspec">
       <SubType>Designer</SubType>
@@ -132,7 +144,6 @@
     <None Include=".Tasks\Pack.ps1" />
     <None Include=".Tasks\Push.ps1" />
     <None Include=".Tasks\ReplaceCacheBust.ps1" />
-    <None Include=".Tasks\Test.ps1" />
     <None Include=".Tasks\nuspec\uninstall.ps1" />
     <None Include="tools\install.ps1" />
     <None Include="tools\uninstall.ps1" />
@@ -140,9 +151,6 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include=".Tasks\nuspec\DUMMY.txt" />
-    <None Include=".Tasks\specflow_report_template.html">
-      <DependentUpon>Test.ps1</DependentUpon>
-    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

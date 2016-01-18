@@ -67,7 +67,6 @@ function Get-TestProjectsFromSolution($solution, $basePath) {
 					Name = $projectParts[1];
 					File = $file;
 					Path = $path;
-					Types = @(Get-TestTypesForPath $path $basePath);
 				}	
 			}
 		}
@@ -75,32 +74,29 @@ function Get-TestProjectsFromSolution($solution, $basePath) {
 	return $projects
 }
 
-function Get-TestTypesForPath($path, $basePath) {
-	$types = @()
-	
-	$mspec = Get-PackageInfo Machine.Specifications $basePath\$path
-	if($mspec.Exists) {
-		$types += $mspec
-	}
-	
-	$nunit = Get-PackageInfo NUnit $basePath\$path
-	if ($nunit.Exists) {
-		$specflow = Get-PackageInfo SpecFlow $basePath\$path
-		if ($specflow.Exists) {
-			New-Item "$($specflow.Path)\tools\specflow.exe.config" -Type file -Force -Value `
-				"<?xml version=""1.0"" encoding=""utf-8"" ?> <configuration> <startup> <supportedRuntime version=""v4.0.30319"" /> </startup> </configuration>" | Out-Null
-			$types += $specflow
+function Get-ProjectsWithPackage($packageName){
+	$solution = "$basePath\$projectName.sln"
+	$projects = @()
+	if (Test-Path $solution) {
+		Get-Content $solution |
+		Select-String 'Project\(' |
+		ForEach-Object {
+			$projectParts = $_ -Split '[,=]' | ForEach-Object { $_.Trim('[ "{}]') };
+			if($projectParts[2].EndsWith(".csproj")) {
+				$file = $projectParts[2].Split("\")[-1]
+				$path = $projectParts[2].Replace("\$file", "")
+				
+				if ((Get-PackageInfo $packageName $basePath\$path).Exists){
+					$projects += New-Object PSObject -Property @{
+									Name = $projectParts[1];
+									File = $file;
+									Path = $path;
+								}	
+				}
+			}
 		}
-		else {
-			$types += $nunit
-		}
 	}
-	
-	if (Test-Path $basePath\$path\js\runner.js) {
-		$types += Get-PackageInfo Chutzpah $basePath\$path
-	}
-	
-	return $types
+	return $projects
 }
 
 function Get-SolutionConfigurations($solution) {
