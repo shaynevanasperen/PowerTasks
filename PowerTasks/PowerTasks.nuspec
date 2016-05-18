@@ -15,7 +15,7 @@
 		<tags>build, powershell, invoke, convention, clean, compile, test, pack, push, octopack, octopus, deploy, azure, website, cloud,service, grunt, chutzpah, 7zip, ilmerge, mspec, nunit, specflow, nuget</tags>
 		<developmentDependency>true</developmentDependency>
 		<dependencies>
-			<dependency id="Invoke-Build" version="2.12.3" />
+			<dependency id="Invoke-Build" version="2.14.4" />
 		</dependencies>
 	</metadata>
 	<files>
