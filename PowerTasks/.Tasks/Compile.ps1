@@ -3,7 +3,7 @@ $script:config = (property config "Release")
 $script:outputPath = (property outputPath (Get-OutputPath $basePath $artifactsPath $projectName))
 $script:azureTargetProfile = (property azureTargetProfile "")
 $script:projectTests = @(Get-TestProjectsFromSolution $basePath\$projectName.sln $basePath)
-$script:msBuildVersion = (property msBuildVersion "12.0")
+$script:msBuildVersion = (property msBuildVersion "14.0")
 
 task Compile {
 	use $msBuildVersion MSBuild
