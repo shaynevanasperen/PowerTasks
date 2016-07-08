@@ -74,6 +74,33 @@ function Get-TestProjectsFromSolution($solution, $basePath) {
 	return $projects
 }
 
+function Get-ProjectsWithReference($referenceName){
+	$solution = "$basePath\$projectName.sln"
+	$projects = @()
+	if (Test-Path $solution) {
+		Get-Content $solution |
+		Select-String 'Project\(' |
+		ForEach-Object {
+			$projectParts = $_ -Split '[,=]' | ForEach-Object { $_.Trim('[ "{}]') };
+			$projectBasePath = $projectParts[2]
+			if($projectBasePath.EndsWith(".csproj")) {
+				$file = $projectBasePath.Split("\")[-1]
+				$path = $projectBasePath.Replace("\$file", "")
+				$projectContent = Get-Content "$basePath\$projectBasePath" | Out-String
+				
+				if($projectContent.Contains($referenceName)){
+					$projects += New-Object PSObject -Property @{
+									Name = $projectParts[1];
+									File = $file;
+									Path = $path;
+								}	
+				}
+			}
+		}
+	}
+	return $projects
+}
+
 function Get-ProjectsWithPackage($packageName){
 	$solution = "$basePath\$projectName.sln"
 	$projects = @()
