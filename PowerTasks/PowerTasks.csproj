@@ -49,9 +49,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".Tasks.ps1" />
-    <None Include=".Tasks\MsTest.nuspec">
-      <DependentUpon>MsTest.ps1</DependentUpon>
-    </None>
     <None Include=".Tasks\OctoDeployRelease.nuspec">
       <DependentUpon>OctoDeployRelease.ps1</DependentUpon>
     </None>
@@ -60,7 +57,10 @@
       <DependentUpon>Chutzpah.ps1</DependentUpon>
     </None>
     <None Include=".Tasks\Chutzpah.ps1" />
-    <None Include=".Tasks\MsTest.ps1" />
+    <None Include=".Tasks\VsTest.nuspec">
+      <DependentUpon>VsTest.ps1</DependentUpon>
+    </None>
+    <None Include=".Tasks\VsTest.ps1" />
     <None Include=".Tasks\XUnit.nuspec">
       <DependentUpon>XUnit.ps1</DependentUpon>
     </None>
