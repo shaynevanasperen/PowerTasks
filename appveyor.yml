@@ -1,0 +1,8 @@
+build_script: 
+  - pt ci
+
+branches:
+  only:
+    - master
+    
+test: off
