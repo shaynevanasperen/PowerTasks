@@ -3,11 +3,15 @@ $script:config = (property config "Release")
 $script:outputPath = (property outputPath (Get-OutputPath $basePath $artifactsPath $projectName))
 $script:azureTargetProfile = (property azureTargetProfile "")
 $script:projectTests = @(Get-TestProjectsFromSolution $basePath\$projectName.sln $basePath)
+$script:projects = @(Get-ProjectsFromSolution $basePath\$projectName.sln $basePath)
 $script:msBuildVersion = (property msBuildVersion "14.0")
 
 task Compile {
 	use $msBuildVersion MSBuild
-	Convert-Project $config $basePath $projectName $outputPath $azureTargetProfile
+	foreach ($project in $projects) {
+		Convert-Project $config $basePath $project.Name $outputPath $azureTargetProfile
+	}
+
 	$ilMerge = Get-PackageInfo ILMerge $basePath\$projectName
 	if ($ilMerge.Exists) {
 		Merge-Application "$($ilMerge.Path)" $outputPath $projectName
