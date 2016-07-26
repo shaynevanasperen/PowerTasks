@@ -1,80 +1,249 @@
-$script:artifactsPath = (property artifactsPath $basePath\artifacts)
-$script:config = (property config "Release")
-$script:outputPath = (property outputPath (Get-OutputPath $basePath $artifactsPath $projectName))
-$script:azureTargetProfile = (property azureTargetProfile "")
-$script:projectTests = @(Get-TestProjectsFromSolution $basePath\$projectName.sln $basePath)
-$script:projects = @(Get-ProjectsFromSolution $basePath\$projectName.sln $basePath)
-$script:msBuildVersion = (property msBuildVersion "14.0")
-
-task Compile {
-	use $msBuildVersion MSBuild
-	foreach ($project in $projects) {
-		Convert-Project $config $basePath $project.Name $(Get-OutputPath $basePath $artifactsPath $project.Name) $azureTargetProfile
+function Get-RequiredPackagePath($packageId, $path) {
+	$package = Get-PackageInfo $packageId $path
+	if (!$package.Exists) {
+		throw "$packageId is required in $path, but it is not installed. Please install $packageId in $path"
 	}
-
-	$ilMerge = Get-PackageInfo ILMerge $basePath\$projectName
-	if ($ilMerge.Exists) {
-		Merge-Application "$($ilMerge.Path)" $outputPath $projectName
-	}
-	Convert-ProjectTests $config $basePath $projectName $projectTests
+	return $package.Path
 }
 
-function script:Convert-Project($config, $basePath, $projectName, $outputPath, $azureTargetProfile) {
-	$projectFile = Get-ProjectFile $basePath $projectName
-	$isCloudProject = $projectFile.EndsWith("ccproj")
-	$isWebProject = (((Select-String -pattern "<UseIISExpress>.+</UseIISExpress>" -path $projectFile) -ne $null) -and ((Select-String -pattern "<OutputType>WinExe</OutputType>" -path $projectFile) -eq $null))
-	$isWinProject = (((Select-String -pattern "<UseIISExpress>.+</UseIISExpress>" -path $projectFile) -eq $null) -and ((Select-String -pattern "<OutputType>WinExe</OutputType>" -path $projectFile) -ne $null))
-	$isExeProject = (((Select-String -pattern "<UseIISExpress>.+</UseIISExpress>" -path $projectFile) -eq $null) -and ((Select-String -pattern "<OutputType>Exe</OutputType>" -path $projectFile) -ne $null))
-	
-	$projectName = Get-ProjectName $projectFile
-	if ($isCloudProject) {
-		Write-Host "Compiling $projectName to $outputPath"
-		exec { MSBuild $projectFile /p:Configuration=$config /nologo /p:DebugType=None /p:Platform=AnyCpu /t:publish /p:OutputPath=$outputPath\ /p:TargetProfile=$azureTargetProfile /verbosity:quiet }
+function Remove-Directory($path) {
+	Remove-Item $path -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
+}
+
+function Get-AssemblyFileVersion($assemblyInfoFile) {
+	$line = Get-Content $assemblyInfoFile | Where { $_.Contains("AssemblyFileVersion") }
+	if (!$line) {
+		$line = Get-Content $assemblyInfoFile | Where { $_.Contains("AssemblyVersion") }
+		if (!$line) {
+			throw "Couldn't find an AssemblyFileVersion or AssemblyVersion attribute"
+		}
 	}
-	elseif ($isWebProject) {
-		Write-Host "Compiling $projectName to $outputPath"
-		exec { MSBuild $projectFile /p:Configuration=$config /nologo /p:DebugType=None /p:Platform=AnyCpu /p:WebProjectOutputDir=$outputPath /p:OutDir=$outputPath\bin /verbosity:quiet }
+	return $line.Split('"')[1]
+}
+
+function Resolve-PackageVersion($prereleaseVersion) {
+	if (![string]::IsNullOrWhiteSpace($prereleaseVersion)) {
+		$parsed = $prereleaseVersion.Replace("{date}", $(Get-Date).ToString("yyMMddHHmm"))
+		$parsed = $parsed -Replace "[^a-zA-Z0-9-]", ""
 	}
-	elseif ($isWinProject -or $isExeProject) {
-		Write-Host "Compiling $projectName to $outputPath"
-		exec { MSBuild $projectFile /p:Configuration=$config /nologo /p:DebugType=None /p:Platform=AnyCpu /p:OutDir=$outputPath /verbosity:quiet }
+	if (![string]::IsNullOrWhiteSpace($parsed)) {
+		$version = ([string]$input).Split('-')[0]
+		return "$version-$parsed"
 	}
-	elseif (!$projectName.EndsWith("Tests")) {
-		Write-Host "Compiling $projectName"
-		exec { MSBuild $projectFile /p:Configuration=$config /nologo /p:Platform=AnyCpu /verbosity:quiet }
+	else {
+		return $input
 	}
 }
 
-function script:Convert-ProjectTests($config, $basePath, $projectName, $projectTests) {
-	if ($projectTests.Length -gt 0) {
-		foreach ($projectTest in $projectTests) {
-			"Compiling $($projectTest.Name)"
-			$projectFile = "$basePath\$($projectTest.Path)\$($projectTest.File)"
-			if (Test-Path $projectFile) {
-				if(@($projectTest.Types | ?{ $_.Name -eq "SpecFlow" }).Length -gt 0) {
-					@(Get-SolutionConfigurations $basePath\$projectName.sln) | Where { (Get-IsLocalTest $_ $basePath\$($projectTest.Path)) -ne $true } | foreach {
-						exec { MSBuild $projectFile /p:Configuration=$_ /nologo /verbosity:quiet }
-					}
-				}
-				else {
-					exec { MSBuild $projectFile /p:Configuration=$config /nologo /verbosity:quiet }
+function Include-PluginScripts([string[]] $packageIdPatterns) {
+	$packageIdPatterns = @("PowerTasks.Plugins.*") + $packageIdPatterns
+	$packageIdPatterns |
+		% { Get-PackageNames $_ . } | Select -Unique |
+		% {	(Get-PackageInfo $_ .) } | Where { $_.Exists } |
+		% {	Get-ChildItem "$($_.Path)\scripts\*.ps1" } |
+		% { . $_ }
+}
+
+function Get-PackageNames($pattern, $path = ".") {
+	if (!(Test-Path $path\packages.config)) {
+		return @()
+	}
+	[xml]$packagesXml = Get-Content $path\packages.config
+	return $packagesXml.packages.package | Where { $_.id -like $pattern } | Select -ExpandProperty id
+}
+
+function Get-TestProjectsFromSolution($solution, $basePath) {
+	$projects = @()
+	if (Test-Path $solution) {
+		Get-Content $solution |
+		Select-String 'Project\(' |
+		ForEach-Object {
+			$projectParts = $_ -Split '[,=]' | ForEach-Object { $_.Trim('[ "{}]') };
+			if($projectParts[2].EndsWith(".csproj") -and $projectParts[1].EndsWith("Tests")) {
+				$file = $projectParts[2].Split("\")[-1]
+				$path = $projectParts[2].Replace("\$file", "")
+				
+				$projects += New-Object PSObject -Property @{
+					Name = $projectParts[1];
+					File = $file;
+					Path = $path;
+				}	
+			}
+		}
+	}
+	return $projects
+}
+
+function Get-ProjectsFromSolution($solution, $basePath) {
+	$projects = @()
+	if (Test-Path $solution) {
+		Get-Content $solution |
+		Select-String 'Project\(' |
+		ForEach-Object {
+			$projectParts = $_ -Split '[,=]' | ForEach-Object { $_.Trim('[ "{}]') };
+			if($projectParts[2].EndsWith(".csproj")) {
+				$file = $projectParts[2].Split("\")[-1]
+				$path = $projectParts[2].Replace("\$file", "")
+				
+				$projects += New-Object PSObject -Property @{
+					Name = $projectParts[1];
+					File = $file;
+					Path = $path;
+				}	
+			}
+		}
+	}
+	return $projects
+}
+
+function Get-ProjectsWithReference($referenceName){
+	$solution = "$basePath\$projectName.sln"
+	$projects = @()
+	if (Test-Path $solution) {
+		Get-Content $solution |
+		Select-String 'Project\(' |
+		ForEach-Object {
+			$projectParts = $_ -Split '[,=]' | ForEach-Object { $_.Trim('[ "{}]') };
+			$projectBasePath = $projectParts[2]
+			if($projectBasePath.EndsWith(".csproj")) {
+				$file = $projectBasePath.Split("\")[-1]
+				$path = $projectBasePath.Replace("\$file", "")
+				$projectContent = Get-Content "$basePath\$projectBasePath" | Out-String
+				
+				if($projectContent.Contains($referenceName)){
+					$projects += New-Object PSObject -Property @{
+									Name = $projectParts[1];
+									File = $file;
+									Path = $path;
+								}	
 				}
 			}
 		}
 	}
+	return $projects
 }
 
-function script:Merge-Application($ilMergePath, $outputPath, $projectName) {
-	Write-Host "Merging application executables and assemblies"
-	$exeNames = Get-ChildItem -Path "$outputPath\*" -Filter *.exe | ForEach-Object { """" + $_.FullName + """" }
-	$assemblyNames = Get-ChildItem -Path "$outputPath\*" -Filter *.dll | ForEach-Object { """" + $_.FullName + """" }
+function Get-ProjectsWithPackage($packageName){
+	$solution = "$basePath\$projectName.sln"
+	$projects = @()
+	if (Test-Path $solution) {
+		Get-Content $solution |
+		Select-String 'Project\(' |
+		ForEach-Object {
+			$projectParts = $_ -Split '[,=]' | ForEach-Object { $_.Trim('[ "{}]') };
+			if($projectParts[2].EndsWith(".csproj")) {
+				$file = $projectParts[2].Split("\")[-1]
+				$path = $projectParts[2].Replace("\$file", "")
+				
+				if ((Get-PackageInfo $packageName $basePath\$path).Exists){
+					$projects += New-Object PSObject -Property @{
+									Name = $projectParts[1];
+									File = $file;
+									Path = $path;
+								}	
+				}
+			}
+		}
+	}
+	return $projects
+}
+
+function Get-SolutionConfigurations($solution) {
+	Get-Content $solution |
+	Where-Object {$_ -match "(?<config>\w+)\|"} |
+	%{ $($Matches['config'])} |
+	Select -uniq
+}
+
+function Get-PackageInfo($packageId, $path) {
+	if (!(Test-Path "$path\packages.config")) {
+		return New-Object PSObject -Property @{
+			Exists = $false;
+		}
+	}
 	
-	$assemblyNamesArgument = [System.String]::Join(" ", $assemblyNames)
-	$exeNamesArgument = [System.String]::Join(" ", $exeNames)
+	[xml]$packagesXml = Get-Content "$path\packages.config"
+	$package = $packagesXml.packages.package | Where { $_.id -eq $packageId }
+	if (!$package) {
+		return New-Object PSObject -Property @{
+			Exists = $false;
+		}
+	}
 	
-	$appFileName = "$outputPath\$projectName.exe"
+	$versionComponents = $package.version.Split('.')
+    [array]::Reverse($versionComponents)
+		
+	$numericalVersion = 0
+	$modifier = 1
 	
-	Invoke-Expression "$ilMergePath\tools\ILMerge.exe /t:exe /targetPlatform:""v4"" /out:$appFileName $exeNamesArgument $assemblyNamesArgument"
+	foreach ($component in $versionComponents) {
+		$numericalComponent = $component -as [int]
+		if ($numericalComponent -eq $null) {
+			continue
+		}
+		$numericalVersion = $numericalVersion + ([int]$numericalComponent * $modifier)
+		$modifier = $modifier * 10
+	}
 	
-	Get-ChildItem -Path "$outputPath\*" -Exclude *.exe,*.config | foreach { $_.Delete() }
+	return New-Object PSObject -Property @{
+		Exists = $true;
+		Version = $package.version;
+		Number = $numericalVersion;
+		Id = $package.id;
+		Path = "$packagesPath\$($package.id).$($package.version)"
+	}
+}
+
+function Get-IsLocalTest($configuration, $path) {
+	[xml](Get-Content "$path\app.$configuration.config") |
+	Select-Xml "//configuration/appSettings/add[@key='local']" |
+	%{ $_.Node.Attributes["value"].Value } |
+	Select -First 1
+}
+
+function Get-ProjectName($projectFile) {
+	$projectName = (Split-Path $projectFile -Leaf)
+	$projectName = $projectName.Substring(0, $projectName.LastIndexOf("."))
+	return $projectName
+}
+
+function Get-ProjectFile($basePath, $projectName) {
+	$projectFile = "$basePath\$projectName.Cloud\$projectName.Cloud.ccproj"
+	if (!(Test-Path $projectFile)) {
+		$projectFile = "$basePath\$projectName\$projectName.csproj"
+	}
+	return $projectFile
+}
+
+function Get-OutputPath($basePath, $artifactsPath, $projectName) {
+	$projectFile = Get-ProjectFile $basePath $projectName
+	$projectName = Get-ProjectName $projectFile
+	$outputPath = "$artifactsPath\$projectName"
+	return $outputPath
+}
+
+function Push-Package($basePath, $package, $nugetPackageSource, $nugetPackageSourceApiKey, $ignoreNugetPushErrors) {
+	try {
+		if (![string]::IsNullOrEmpty($nugetPackageSourceApiKey) -and $nugetPackageSourceApiKey -ne "LoadFromNuGetConfig") {
+			$out = NuGet push $package -Source $nugetPackageSource -ApiKey $nugetPackageSourceApiKey 2>&1
+		}
+		else {
+			$out = NuGet push $package -Source $nugetPackageSource 2>&1
+		}
+		Write-Host $out
+	}
+	catch {
+		$errorMessage = $_
+		$ignoreNugetPushErrors.Split(";") | foreach {
+			if ($([String]$errorMessage).Contains($_)) {
+				$isNugetPushError = $true
+			}
+		}
+		if (!$isNugetPushError) {
+			throw
+		}
+		else {
+			Write-Host "WARNING: $errorMessage"
+		}
+	}
 }

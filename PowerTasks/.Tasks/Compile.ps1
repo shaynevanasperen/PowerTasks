@@ -9,7 +9,7 @@ $script:msBuildVersion = (property msBuildVersion "14.0")
 task Compile {
 	use $msBuildVersion MSBuild
 	foreach ($project in $projects) {
-		Convert-Project $config $basePath $project.Name $outputPath $azureTargetProfile
+		Convert-Project $config $basePath $project.Name $(Get-OutputPath $basePath $artifactsPath $project.Name) $azureTargetProfile
 	}
 
 	$ilMerge = Get-PackageInfo ILMerge $basePath\$projectName
