@@ -22,7 +22,11 @@ function script:Set-Version($projectPath, $version) {
 			pushd ..
 			
 			try {
-				$branch = git branch | Where {$_ -match "^\*(.*)"} | Select-Object -First 1
+				if([String]::IsNullOrEmpty($env:APPVEYOR_REPO_BRANCH)){
+					$branch = git branch | Where {$_ -match "^\*(.*)"} | Select-Object -First 1
+				} else{
+					$branc = $env:APPVEYOR_REPO_BRANCH
+				}
 				$branch = $branch.Replace("* ", "").Replace("/", "-")
 
 				$commit = git rev-parse HEAD
