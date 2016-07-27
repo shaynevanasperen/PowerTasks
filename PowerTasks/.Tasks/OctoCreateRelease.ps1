@@ -20,7 +20,7 @@ task OctoCreateRelease {
 				foreach { $matches["version"] }
 
 	$octopusToolsPath = Get-RequiredPackagePath OctopusTools $basePath\$projectName
-	$cmd = "$octopusToolsPath\Octo.exe create-release --server=""$octopusDeployServer"" --apiKey=""$octopusDeployApiKey"" --project=""$octopusDeployProjectName"" --version=""$version"""
+	$cmd = "$octopusToolsPath\tools\Octo.exe create-release --server=""$octopusDeployServer"" --apiKey=""$octopusDeployApiKey"" --project=""$octopusDeployProjectName"" --version=""$version"""
 
 	if(![String]::IsNullOrEmpty($releaseNotes)){
 		$cmd += " --releasenotes=""$releaseNotes"""

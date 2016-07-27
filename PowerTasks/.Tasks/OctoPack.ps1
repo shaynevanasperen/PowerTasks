@@ -7,5 +7,5 @@ task OctoPack {
 		$version = (Get-Date).ToString("yyyy.MM.dd.HHmmss")
 	}
 	$packageVersion = $version | Resolve-PackageVersion $prereleaseVersion
-	exec { & $octopusToolsPath\Octo.exe pack --basePath=$outputPath --outFolder=$artifactsPath --id=$projectName --version=$packageVersion }
+	exec { & $octopusToolsPath\tools\Octo.exe pack --basePath=$outputPath --outFolder=$artifactsPath --id=$projectName --version=$packageVersion }
 }

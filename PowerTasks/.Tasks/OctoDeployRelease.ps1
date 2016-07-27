@@ -18,7 +18,7 @@ task OctoDeployRelease {
 				foreach { $matches["version"] }
 
 	$octopusToolsPath = Get-RequiredPackagePath OctopusTools $basePath\$projectName
-	$cmd = "$octopusToolsPath\Octo.exe deploy-release --server=""$octopusDeployServer"" --apiKey=""$octopusDeployApiKey"" --project=""$octopusDeployProjectName"" --version=""$version"" --deployto=""$environment"""
+	$cmd = "$octopusToolsPath\tools\Octo.exe deploy-release --server=""$octopusDeployServer"" --apiKey=""$octopusDeployApiKey"" --project=""$octopusDeployProjectName"" --version=""$version"" --deployto=""$environment"""
 
 	exec { & Invoke-Expression $cmd }
 }
