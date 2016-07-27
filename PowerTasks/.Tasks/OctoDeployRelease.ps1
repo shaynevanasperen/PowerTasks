@@ -13,9 +13,11 @@ task OctoDeployRelease {
 	}
 
 	$assemblyInfoFile = Get-Content ".\Properties\AssemblyInfo.cs"
-	$version = $assemblyInfoFile | 
-				where { $_ -match "AssemblyVersion\(`"(?<version>.*)`"\)" } |
-				foreach { $matches["version"] }
+	if(!$version){
+		$version = $assemblyInfoFile | 
+					where { $_ -match "AssemblyVersion\(`"(?<version>.*)`"\)" } |
+					foreach { $matches["version"] }
+	}
 
 	$octopusToolsPath = Get-RequiredPackagePath OctopusTools $basePath\$projectName
 	$cmd = "$octopusToolsPath\tools\Octo.exe deploy-release --server=""$octopusDeployServer"" --apiKey=""$octopusDeployApiKey"" --project=""$octopusDeployProjectName"" --version=""$version"" --deployto=""$environment"""

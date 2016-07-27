@@ -14,10 +14,12 @@ task OctoCreateRelease {
 		throw "Please specify the octopusDeployApiKey"
 	}
 
-	$assemblyInfoFile = Get-Content ".\Properties\AssemblyInfo.cs"
-	$version = $assemblyInfoFile | 
-				where { $_ -match "AssemblyVersion\(`"(?<version>.*)`"\)" } |
-				foreach { $matches["version"] }
+	if(!$version){
+		$assemblyInfoFile = Get-Content ".\Properties\AssemblyInfo.cs"
+		$version = $assemblyInfoFile | 
+					where { $_ -match "AssemblyVersion\(`"(?<version>.*)`"\)" } |
+					foreach { $matches["version"] }
+	}
 
 	$octopusToolsPath = Get-RequiredPackagePath OctopusTools $basePath\$projectName
 	$cmd = "$octopusToolsPath\tools\Octo.exe create-release --server=""$octopusDeployServer"" --apiKey=""$octopusDeployApiKey"" --project=""$octopusDeployProjectName"" --version=""$version"""
