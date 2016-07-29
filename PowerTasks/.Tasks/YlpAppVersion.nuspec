@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
 	<metadata>
 		<id>PowerTasks.Plugins.YlpAppVersion</id>
-		<version>1.0.0</version>
+		<version>1.0.1</version>
 		<authors>Kenneth Truyers</authors>
 		<owners>Kenneth Truyers</owners>
 		<licenseUrl>https://github.com/shaynevanasperen/PowerTasks/blob/master/LICENSE</licenseUrl>
@@ -22,6 +22,6 @@
 		<file src="nuspec\DUMMY.txt" target="lib" />
 		<file src="nuspec\install.ps1" target="tools" />
 		<file src="nuspec\uninstall.ps1" target="tools" />
-		<file src="Version.ps1" target="scripts" />
+		<file src="YlpAppVersion.ps1" target="scripts" />
 	</files>
 </package>
