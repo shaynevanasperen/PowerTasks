@@ -18,7 +18,7 @@ function script:Set-Version($projectPath, $version) {
 		$assemblyVersion = $version.Clone()
 		$assemblyVersion = $assemblyVersion.Replace("{commit}", "").Replace("{shortCommit}", "").Replace("{branch}", "").Replace("-", "")
 		Write-Host $assemblyVersion
-		if($version.Contains("{branch}") -or $version.Contains("commit")){
+		if($version.ToLower().Contains("{branch}") -or $version.ToLower().Contains("commit")){
 			pushd ..
 			
 			try {
