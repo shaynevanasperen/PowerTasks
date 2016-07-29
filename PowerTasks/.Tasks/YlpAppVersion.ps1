@@ -19,7 +19,7 @@ function script:Set-Version($projectPath, $version) {
 	popd
 		
 	$version = "$(Get-date -f yyyy).$(Get-date -f MM).$(Get-date -f dd)-v$buildNumber-$shortCommit"
-	$assemblyVersion = "$(Get-date -f yyyy).$(Get-date -f MM).$(Get-date -f dd).$($buildNumber.SubString(0, 5))"
+	$assemblyVersion = "$(Get-date -f yyyy).$(Get-date -f MM).$(Get-date -f dd).$($buildNumber.SubString(0, [System.Math]::Min(5, $buildNumber.Length)))"
 
 	if ((Test-Path $assemblyInfoFile)) {
 		Write-Host "Updating $assemblyInfoFile with $assemblyVersion"
