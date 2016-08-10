@@ -184,17 +184,23 @@ function Push-Package($basePath, $package, $nugetPackageSource, $nugetPackageSou
 		Write-Host $out
 	}
 	catch {
-		$errorMessage = $_
-		$ignoreNugetPushErrors.Split(";") | foreach {
-			if ($([String]$errorMessage).Contains($_)) {
-				$isNugetPushError = $true
-			}
-		}
-		if (!$isNugetPushError) {
+		if ([string]::IsNullOrEmpty($ignoreNugetPushErrors)){
 			throw
 		}
-		else {
-			Write-Host "WARNING: $errorMessage"
+		else{
+			$suppressError = $false
+			$errorMessage = $_
+			$ignoreNugetPushErrors.Split(";") | foreach {
+				if ($errorMessage -like "*$_*") {
+					$suppressError = $true
+				}
+			}
+			if ($suppressError) {
+				Write-Host "WARNING: $errorMessage"
+			}
+			else {
+				throw
+			}
 		}
 	}
 }
